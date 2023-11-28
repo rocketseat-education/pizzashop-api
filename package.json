@@ -1,0 +1,34 @@
+{
+  "name": "pizzashop",
+  "type": "module",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "generate": "drizzle-kit generate:pg",
+    "dev": "bun --watch src/http/server.ts",
+    "migrate": "bun src/db/migrate.ts",
+    "seed": "bun src/db/seed.ts"
+  },
+  "author": "Diego Fernandes <diego.schell.f@gmail.com>",
+  "license": "MIT",
+  "dependencies": {
+    "@elysiajs/cookie": "^0.7.0",
+    "@elysiajs/cors": "^0.7.2",
+    "@elysiajs/jwt": "^0.7.0",
+    "@paralleldrive/cuid2": "2.2.2",
+    "drizzle-orm": "0.29.0",
+    "elysia": "0.7.29",
+    "postgres": "3.4.3",
+    "zod": "3.22.4"
+  },
+  "devDependencies": {
+    "@faker-js/faker": "8.3.1",
+    "@rocketseat/eslint-config": "2.1.0",
+    "@types/pg": "8.10.9",
+    "chalk": "5.3.0",
+    "bun-types": "^1.0.14",
+    "drizzle-kit": "0.20.6",
+    "eslint": "8.54.0",
+    "typescript": "5.3.2"
+  }
+}
