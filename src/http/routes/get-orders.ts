@@ -1,47 +1,57 @@
-import Elysia from 'elysia'
+import Elysia, { t } from 'elysia'
 import { orders, users } from '@/db/schema'
 import { db } from '@/db/connection'
-import { eq, and, ilike, sql, desc } from 'drizzle-orm'
-import { z } from 'zod'
+import { eq, and, ilike, desc, count } from 'drizzle-orm'
+import { authentication } from '../authentication'
 
-export const getOrders = new Elysia().get('/orders', async ({ query }) => {
-  const { pageIndex, orderNumber, customerName } = z
-    .object({
-      pageIndex: z.coerce.number().default(0),
-      orderNumber: z.string().optional().default(''),
-      customerName: z.string().optional().default(''),
-    })
-    .parse(query)
+export const getOrders = new Elysia().use(authentication).get(
+  '/orders',
+  async ({ query, getCurrentUser, set }) => {
+    const { pageIndex, orderNumber, customerName } = query
+    const { restaurantId } = await getCurrentUser()
 
-  const baseQuery = db
-    .select()
-    .from(orders)
-    .innerJoin(users, eq(users.id, orders.customerId))
-    .where(
-      and(
-        orderNumber ? ilike(orders.id, `%${orderNumber}%`) : undefined,
-        customerName ? ilike(users.name, `%${customerName}%`) : undefined,
-      ),
-    )
+    if (!restaurantId) {
+      set.status = 401
 
-  const ordersCount = await db
-    .select({
-      count,
-    })
-    .from(baseQuery.as('baseQuery'))
+      throw new Error('User is not a restaurant manager.')
+    }
 
-  const allOrders = await baseQuery
-    .offset(pageIndex * 10)
-    .limit(10)
-    .orderBy(desc(orders.createdAt))
-    .leftJoin(users, eq(orders.customerId, users.id))
-    .groupBy(orders.id)
+    const baseQuery = db
+      .select()
+      .from(orders)
+      .innerJoin(users, eq(users.id, orders.customerId))
+      .where(
+        and(
+          eq(orders.restaurantId, restaurantId),
+          orderNumber ? ilike(orders.id, `%${orderNumber}%`) : undefined,
+          customerName ? ilike(users.name, `%${customerName}%`) : undefined,
+        ),
+      )
 
-  return {
-    orders: allOrders,
-    meta: {
-      pageIndex,
-      totalCount: ordersCount[0].count,
-    },
-  }
-})
+    const [ordersCount] = await db
+      .select({ count: count() })
+      .from(baseQuery.as('baseQuery'))
+
+    const allOrders = await baseQuery
+      .offset(pageIndex * 10)
+      .limit(10)
+      .orderBy(desc(orders.createdAt))
+      .leftJoin(users, eq(orders.customerId, users.id))
+      .groupBy(orders.id)
+
+    return {
+      orders: allOrders,
+      meta: {
+        pageIndex,
+        totalCount: ordersCount.count,
+      },
+    }
+  },
+  {
+    query: t.Object({
+      customerName: t.Optional(t.String()),
+      orderNumber: t.Optional(t.String()),
+      pageIndex: t.Numeric({ minimum: 0 }),
+    }),
+  },
+)

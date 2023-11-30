@@ -1,5 +1,9 @@
 {
   "extends": [
-    "@rocketseat/eslint-config/node"
+    "@rocketseat/eslint-config/node",
+    "plugin:drizzle/all"
+  ],
+  "plugins": [
+    "drizzle"
   ]
 }

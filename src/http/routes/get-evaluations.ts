@@ -1,10 +1,19 @@
 import { db } from '@/db/connection'
-import Elysia from 'elysia'
+import Elysia, { t } from 'elysia'
 import { z } from 'zod'
+import { authentication } from '../authentication'
 
-export const getEvaluations = new Elysia().get(
+export const getEvaluations = new Elysia().use(authentication).get(
   '/evaluations',
-  async ({ query }) => {
+  async ({ query, set, getCurrentUser }) => {
+    const { restaurantId } = await getCurrentUser()
+
+    if (!restaurantId) {
+      set.status = 401
+
+      throw new Error('User is not a restaurant manager.')
+    }
+
     const { pageIndex } = z
       .object({
         pageIndex: z.coerce.number().default(0),
@@ -18,5 +27,10 @@ export const getEvaluations = new Elysia().get(
     })
 
     return evaluations
+  },
+  {
+    query: t.Object({
+      pageIndex: t.Numeric({ minimum: 0 }),
+    }),
   },
 )

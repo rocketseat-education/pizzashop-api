@@ -18,7 +18,7 @@
     "@paralleldrive/cuid2": "2.2.2",
     "@react-email/components": "^0.0.11",
     "dayjs": "^1.11.10",
-    "drizzle-orm": "0.29.0",
+    "drizzle-orm": "^0.29.1",
     "elysia": "0.7.29",
     "postgres": "3.4.3",
     "react": "^18.2.0",
@@ -34,6 +34,7 @@
     "chalk": "5.3.0",
     "drizzle-kit": "0.20.6",
     "eslint": "8.54.0",
+    "eslint-plugin-drizzle": "^0.2.1",
     "pg": "^8.11.3",
     "typescript": "5.3.2"
   }

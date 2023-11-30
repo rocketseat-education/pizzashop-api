@@ -2,6 +2,7 @@ import { createId } from '@paralleldrive/cuid2'
 import { pgTable, text, timestamp } from 'drizzle-orm/pg-core'
 import { relations } from 'drizzle-orm'
 import { users } from './users'
+import { orders } from '.'
 
 export const restaurants = pgTable('restaurants', {
   id: text('id')
@@ -16,10 +17,11 @@ export const restaurants = pgTable('restaurants', {
   updatedAt: timestamp('updated_at').defaultNow(),
 })
 
-export const restaurantsRelations = relations(restaurants, ({ one }) => ({
+export const restaurantsRelations = relations(restaurants, ({ one, many }) => ({
   manager: one(users, {
     fields: [restaurants.managerId],
     references: [users.id],
     relationName: 'restaurantManager',
   }),
+  orders: many(orders),
 }))

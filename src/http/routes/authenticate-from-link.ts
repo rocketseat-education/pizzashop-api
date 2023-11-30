@@ -28,8 +28,15 @@ export const authenticateFromLink = new Elysia().use(authentication).get(
       throw new Error('This link is expired, generate a new one.')
     }
 
+    const managedRestaurant = await db.query.restaurants.findFirst({
+      where(fields, { eq }) {
+        return eq(fields.managerId, authLinkFromCode.userId)
+      },
+    })
+
     await signUser({
       sub: authLinkFromCode.userId,
+      restaurantId: managedRestaurant?.id,
     })
 
     await db.delete(authLinks).where(eq(authLinks.code, code))
