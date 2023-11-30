@@ -1,8 +1,7 @@
 import { createId } from '@paralleldrive/cuid2'
 import { relations } from 'drizzle-orm'
 import { pgTable, integer, text, timestamp } from 'drizzle-orm/pg-core'
-import { restaurants } from './restaurants'
-import { users } from './users'
+import { restaurants, users } from '.'
 
 export const evaluations = pgTable('evaluations', {
   id: text('id')
