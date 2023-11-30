@@ -38,22 +38,18 @@ export const authentication = new Elysia()
       },
     }
   })
-// .derive(({ getCurrentUser }) => {
-//   return {
-//     getManagedRestaurant: async () => {
-//       const { sub: userId } = await getCurrentUser()
+  .derive(({ getCurrentUser, set }) => {
+    return {
+      getManagedRestaurantId: async () => {
+        const { restaurantId } = await getCurrentUser()
 
-//       const restaurant = await db.query.restaurants.findFirst({
-//         where(fields, { eq }) {
-//           return eq(fields.managerId, userId)
-//         },
-//       })
+        if (!restaurantId) {
+          set.status = 401
 
-//       if (!restaurant) {
-//         return null
-//       }
+          throw new Error('User is not a restaurant manager.')
+        }
 
-//       return restaurant
-//     },
-//   }
-// })
+        return restaurantId
+      },
+    }
+  })
