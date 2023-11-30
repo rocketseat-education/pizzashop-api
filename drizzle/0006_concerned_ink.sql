@@ -1,0 +1,1 @@
+ALTER TABLE "auth_links" ADD CONSTRAINT "auth_links_code_unique" UNIQUE("code");

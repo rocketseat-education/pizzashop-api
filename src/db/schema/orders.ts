@@ -1,8 +1,8 @@
-import { text, pgEnum, timestamp, pgTable, integer } from 'drizzle-orm/pg-core'
 import { createId } from '@paralleldrive/cuid2'
+import { integer, pgEnum, pgTable, text, timestamp } from 'drizzle-orm/pg-core'
+import { users } from './users'
 import { relations } from 'drizzle-orm'
 
-export const userRoleEnum = pgEnum('user_role', ['manager', 'customer'])
 export const orderStatusEnum = pgEnum('order_status', [
   'pending',
   'accepted',
@@ -11,26 +11,13 @@ export const orderStatusEnum = pgEnum('order_status', [
   'delivered',
 ])
 
-export const users = pgTable('users', {
-  id: text('id')
-    .$defaultFn(() => createId())
-    .primaryKey(),
-  name: text('name').notNull(),
-  email: text('email').notNull(),
-  role: userRoleEnum('role').default('customer').notNull(),
-  createdAt: timestamp('created_at').defaultNow(),
-  updatedAt: timestamp('updated_at').defaultNow(),
-})
-
-export const usersRelations = relations(users, ({ many }) => ({
-  orders: many(orders),
-}))
-
 export const orders = pgTable('orders', {
   id: text('id')
     .$defaultFn(() => createId())
     .primaryKey(),
-  customerId: text('customer_id').references(() => users.id),
+  customerId: text('customer_id').references(() => users.id, {
+    onDelete: 'set null',
+  }),
   status: orderStatusEnum('status').default('pending').notNull(),
   totalInCents: integer('total_in_cents').notNull(),
   createdAt: timestamp('created_at').defaultNow(),

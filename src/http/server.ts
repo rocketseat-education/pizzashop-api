@@ -5,7 +5,7 @@ import { jwt } from '@elysiajs/jwt'
 
 import { registerRestaurant } from './routes/register-restaurant'
 import { registerCustomer } from './routes/register-customer'
-import { authenticate } from './routes/authenticate'
+import { sendAuthenticationLink } from './routes/send-authentication-link'
 import { createOrder } from './routes/create-order'
 import { approveOrder } from './routes/approve-order'
 import { cancelOrder } from './routes/cancel-order'
@@ -16,6 +16,7 @@ import { updateMenu } from './routes/update-menu'
 import { updateProfile } from './routes/update-profile'
 import { authentication } from './authentication'
 import { getProfile } from './routes/get-profile'
+import { authenticateFromLink } from './routes/authenticate-from-link'
 
 const app = new Elysia()
   .use(cors())
@@ -23,7 +24,8 @@ const app = new Elysia()
   .use(getProfile)
   .use(registerRestaurant)
   .use(registerCustomer)
-  .use(authenticate)
+  .use(sendAuthenticationLink)
+  .use(authenticateFromLink)
   .use(createOrder)
   .use(approveOrder)
   .use(cancelOrder)

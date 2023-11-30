@@ -1,7 +1,7 @@
 import Elysia from 'elysia'
 import { orders, users } from '@/db/schema'
-import { db } from '@/lib/db'
-import { eq, and, ilike, sql } from 'drizzle-orm'
+import { db } from '@/db/connection'
+import { eq, and, ilike, sql, desc } from 'drizzle-orm'
 import { z } from 'zod'
 
 export const getOrders = new Elysia().get('/orders', async ({ query }) => {
@@ -26,11 +26,16 @@ export const getOrders = new Elysia().get('/orders', async ({ query }) => {
 
   const ordersCount = await db
     .select({
-      count: sql<number>`cast(count(*) as int)`.as('count'),
+      count,
     })
     .from(baseQuery.as('baseQuery'))
 
-  const allOrders = await baseQuery.offset(pageIndex * 10).limit(10)
+  const allOrders = await baseQuery
+    .offset(pageIndex * 10)
+    .limit(10)
+    .orderBy(desc(orders.createdAt))
+    .leftJoin(users, eq(orders.customerId, users.id))
+    .groupBy(orders.id)
 
   return {
     orders: allOrders,

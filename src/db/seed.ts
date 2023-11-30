@@ -1,7 +1,7 @@
 import { createId } from '@paralleldrive/cuid2'
 import { orders, users } from './schema'
 import { faker } from '@faker-js/faker'
-import { db } from '../lib/db'
+import { db } from './connection'
 import chalk from 'chalk'
 
 const customer1Id = createId()
