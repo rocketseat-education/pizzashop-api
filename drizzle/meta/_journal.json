@@ -5,78 +5,8 @@
     {
       "idx": 0,
       "version": "5",
-      "when": 1701130036198,
-      "tag": "0000_slimy_domino",
-      "breakpoints": true
-    },
-    {
-      "idx": 1,
-      "version": "5",
-      "when": 1701259180195,
-      "tag": "0001_kind_charles_xavier",
-      "breakpoints": true
-    },
-    {
-      "idx": 2,
-      "version": "5",
-      "when": 1701259377460,
-      "tag": "0002_hesitant_ted_forrester",
-      "breakpoints": true
-    },
-    {
-      "idx": 3,
-      "version": "5",
-      "when": 1701279583987,
-      "tag": "0003_melted_iron_lad",
-      "breakpoints": true
-    },
-    {
-      "idx": 4,
-      "version": "5",
-      "when": 1701344390829,
-      "tag": "0004_worthless_sandman",
-      "breakpoints": true
-    },
-    {
-      "idx": 5,
-      "version": "5",
-      "when": 1701345072836,
-      "tag": "0005_small_jetstream",
-      "breakpoints": true
-    },
-    {
-      "idx": 6,
-      "version": "5",
-      "when": 1701345636374,
-      "tag": "0006_concerned_ink",
-      "breakpoints": true
-    },
-    {
-      "idx": 7,
-      "version": "5",
-      "when": 1701347526072,
-      "tag": "0007_wild_genesis",
-      "breakpoints": true
-    },
-    {
-      "idx": 8,
-      "version": "5",
-      "when": 1701347593947,
-      "tag": "0008_optimal_sentinel",
-      "breakpoints": true
-    },
-    {
-      "idx": 9,
-      "version": "5",
-      "when": 1701347668723,
-      "tag": "0009_condemned_landau",
-      "breakpoints": true
-    },
-    {
-      "idx": 10,
-      "version": "5",
-      "when": 1701366700121,
-      "tag": "0010_tiresome_warbird",
+      "when": 1701433741648,
+      "tag": "0000_broken_madelyne_pryor",
       "breakpoints": true
     }
   ]
