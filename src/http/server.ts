@@ -1,7 +1,5 @@
 import { Elysia } from 'elysia'
 import { cors } from '@elysiajs/cors'
-import { cookie } from '@elysiajs/cookie'
-import { jwt } from '@elysiajs/jwt'
 
 import { registerRestaurant } from './routes/register-restaurant'
 import { registerCustomer } from './routes/register-customer'
@@ -19,7 +17,21 @@ import { getProfile } from './routes/get-profile'
 import { authenticateFromLink } from './routes/authenticate-from-link'
 
 const app = new Elysia()
-  .use(cors())
+  .use(
+    cors({
+      credentials: true,
+      allowedHeaders: ['content-type'],
+      origin: (request): boolean => {
+        const origin = request.headers.get('origin')
+
+        if (!origin) {
+          return false
+        }
+
+        return true
+      },
+    }),
+  )
   .use(authentication)
   .use(getProfile)
   .use(registerRestaurant)

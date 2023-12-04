@@ -2,7 +2,7 @@ import Elysia, { Static, t } from 'elysia'
 import cookie from '@elysiajs/cookie'
 import jwt from '@elysiajs/jwt'
 import { env } from '@/env'
-// import { db } from '@/lib/db'
+import { UnauthorizedError } from './routes/errors/unauthorized-error'
 
 const jwtPayloadSchema = t.Object({
   sub: t.String(),
@@ -10,6 +10,16 @@ const jwtPayloadSchema = t.Object({
 })
 
 export const authentication = new Elysia()
+  .error({
+    UNAUTHORIZED: UnauthorizedError,
+  })
+  .onError(({ code, error, set }) => {
+    switch (code) {
+      case 'UNAUTHORIZED':
+        set.status = 401
+        return { code, message: error.message }
+    }
+  })
   .use(
     jwt({
       name: 'jwt',
@@ -18,14 +28,13 @@ export const authentication = new Elysia()
     }),
   )
   .use(cookie())
-  .derive(({ jwt, cookie: { auth }, setCookie, set }) => {
+  .derive(({ jwt, cookie, setCookie }) => {
     return {
       getCurrentUser: async () => {
-        const payload = await jwt.verify(auth)
+        const payload = await jwt.verify(cookie.auth)
 
         if (!payload) {
-          set.status = 401
-          throw new Error('Unauthorized')
+          throw new UnauthorizedError()
         }
 
         return payload
@@ -34,6 +43,7 @@ export const authentication = new Elysia()
         setCookie('auth', await jwt.sign(payload), {
           httpOnly: true,
           maxAge: 7 * 86400,
+          path: '/',
         })
       },
     }

@@ -4,6 +4,7 @@ import { authentication } from '../authentication'
 import { db } from '@/db/connection'
 import { authLinks } from '@/db/schema'
 import { eq } from 'drizzle-orm'
+import { UnauthorizedError } from './errors/unauthorized-error'
 
 export const authenticateFromLink = new Elysia().use(authentication).get(
   '/auth-links/authenticate',
@@ -17,15 +18,11 @@ export const authenticateFromLink = new Elysia().use(authentication).get(
     })
 
     if (!authLinkFromCode) {
-      set.status = 401
-
-      throw new Error('Invalid authentication code.')
+      throw new UnauthorizedError()
     }
 
     if (dayjs().diff(authLinkFromCode.createdAt, 'days') > 7) {
-      set.status = 401
-
-      throw new Error('This link is expired, generate a new one.')
+      throw new UnauthorizedError()
     }
 
     const managedRestaurant = await db.query.restaurants.findFirst({

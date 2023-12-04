@@ -5,9 +5,10 @@ import { createId } from '@paralleldrive/cuid2'
 import { resend } from '@/mail/client'
 import { AuthenticationMagicLinkTemplate } from '@/mail/templates/authentication-magic-link'
 import { env } from '@/env'
+import { UnauthorizedError } from './errors/unauthorized-error'
 
 export const sendAuthenticationLink = new Elysia().post(
-  '/auth-links',
+  '/authenticate',
   async ({ body, set }) => {
     const { email } = body
 
@@ -18,9 +19,7 @@ export const sendAuthenticationLink = new Elysia().post(
     })
 
     if (!userFromEmail) {
-      set.status = 401
-
-      throw new Error('Unauthorized')
+      throw new UnauthorizedError()
     }
 
     const authLinkCode = createId()
@@ -32,7 +31,7 @@ export const sendAuthenticationLink = new Elysia().post(
 
     const authLink = new URL('/auth-links/authenticate', env.API_BASE_URL)
     authLink.searchParams.set('code', authLinkCode)
-    authLink.searchParams.set('redirect', env.APP_BASE_URL)
+    authLink.searchParams.set('redirect', env.AUTH_REDIRECT_URL)
 
     await resend.emails.send({
       from: 'Pizza Shop <naoresponda@fala.dev>',

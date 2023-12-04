@@ -4,10 +4,10 @@ import { db } from '@/db/connection'
 
 export const getProfile = new Elysia()
   .use(authentication)
-  .get('/profile', async ({ getCurrentUser }) => {
+  .get('/me', async ({ getCurrentUser }) => {
     const { sub: userId } = await getCurrentUser()
 
-    const user = await db.query.restaurants.findFirst({
+    const user = await db.query.users.findFirst({
       where(fields, { eq }) {
         return eq(fields.id, userId)
       },
