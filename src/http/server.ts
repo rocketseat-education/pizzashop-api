@@ -15,12 +15,15 @@ import { updateProfile } from './routes/update-profile'
 import { authentication } from './authentication'
 import { getProfile } from './routes/get-profile'
 import { authenticateFromLink } from './routes/authenticate-from-link'
+import { getManagedRestaurant } from './routes/get-managed-restaurant'
+import { signOut } from './routes/sign-out'
 
 const app = new Elysia()
   .use(
     cors({
       credentials: true,
       allowedHeaders: ['content-type'],
+      methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'HEAD', 'OPTIONS'],
       origin: (request): boolean => {
         const origin = request.headers.get('origin')
 
@@ -33,7 +36,9 @@ const app = new Elysia()
     }),
   )
   .use(authentication)
+  .use(signOut)
   .use(getProfile)
+  .use(getManagedRestaurant)
   .use(registerRestaurant)
   .use(registerCustomer)
   .use(sendAuthenticationLink)

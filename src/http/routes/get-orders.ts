@@ -2,12 +2,13 @@ import Elysia, { t } from 'elysia'
 import { orders, users } from '@/db/schema'
 import { db } from '@/db/connection'
 import { eq, and, ilike, desc, count } from 'drizzle-orm'
+import { createSelectSchema } from 'drizzle-typebox'
 import { authentication } from '../authentication'
 
 export const getOrders = new Elysia().use(authentication).get(
   '/orders',
   async ({ query, getCurrentUser, set }) => {
-    const { pageIndex, orderNumber, customerName } = query
+    const { pageIndex, orderId, customerName, status } = query
     const { restaurantId } = await getCurrentUser()
 
     if (!restaurantId) {
@@ -17,13 +18,20 @@ export const getOrders = new Elysia().use(authentication).get(
     }
 
     const baseQuery = db
-      .select()
+      .select({
+        orderId: orders.id,
+        createdAt: orders.createdAt,
+        status: orders.status,
+        customerName: users.name,
+        total: orders.totalInCents,
+      })
       .from(orders)
       .innerJoin(users, eq(users.id, orders.customerId))
       .where(
         and(
           eq(orders.restaurantId, restaurantId),
-          orderNumber ? ilike(orders.id, `%${orderNumber}%`) : undefined,
+          orderId ? ilike(orders.id, `%${orderId}%`) : undefined,
+          status ? eq(orders.status, status) : undefined,
           customerName ? ilike(users.name, `%${customerName}%`) : undefined,
         ),
       )
@@ -36,21 +44,23 @@ export const getOrders = new Elysia().use(authentication).get(
       .offset(pageIndex * 10)
       .limit(10)
       .orderBy(desc(orders.createdAt))
-      .leftJoin(users, eq(orders.customerId, users.id))
-      .groupBy(orders.id)
 
-    return {
+    const result = {
       orders: allOrders,
       meta: {
         pageIndex,
+        perPage: 10,
         totalCount: ordersCount.count,
       },
     }
+
+    return result
   },
   {
     query: t.Object({
       customerName: t.Optional(t.String()),
-      orderNumber: t.Optional(t.String()),
+      orderId: t.Optional(t.String()),
+      status: t.Optional(createSelectSchema(orders).properties.status),
       pageIndex: t.Numeric({ minimum: 0 }),
     }),
   },

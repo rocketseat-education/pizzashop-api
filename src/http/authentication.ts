@@ -3,6 +3,7 @@ import cookie from '@elysiajs/cookie'
 import jwt from '@elysiajs/jwt'
 import { env } from '@/env'
 import { UnauthorizedError } from './routes/errors/unauthorized-error'
+import { NotAManagerError } from './routes/errors/not-a-manager-error'
 
 const jwtPayloadSchema = t.Object({
   sub: t.String(),
@@ -12,10 +13,14 @@ const jwtPayloadSchema = t.Object({
 export const authentication = new Elysia()
   .error({
     UNAUTHORIZED: UnauthorizedError,
+    NOT_A_MANAGER: NotAManagerError,
   })
   .onError(({ code, error, set }) => {
     switch (code) {
       case 'UNAUTHORIZED':
+        set.status = 401
+        return { code, message: error.message }
+      case 'NOT_A_MANAGER':
         set.status = 401
         return { code, message: error.message }
     }
@@ -28,7 +33,7 @@ export const authentication = new Elysia()
     }),
   )
   .use(cookie())
-  .derive(({ jwt, cookie, setCookie }) => {
+  .derive(({ jwt, cookie, setCookie, removeCookie }) => {
     return {
       getCurrentUser: async () => {
         const payload = await jwt.verify(cookie.auth)
@@ -46,17 +51,18 @@ export const authentication = new Elysia()
           path: '/',
         })
       },
+      signOut: () => {
+        removeCookie('auth')
+      },
     }
   })
-  .derive(({ getCurrentUser, set }) => {
+  .derive(({ getCurrentUser }) => {
     return {
       getManagedRestaurantId: async () => {
         const { restaurantId } = await getCurrentUser()
 
         if (!restaurantId) {
-          set.status = 401
-
-          throw new Error('User is not a restaurant manager.')
+          throw new NotAManagerError()
         }
 
         return restaurantId

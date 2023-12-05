@@ -3,6 +3,7 @@ import { authentication } from '../authentication'
 import { db } from '@/db/connection'
 import { orders } from '@/db/schema'
 import { eq } from 'drizzle-orm'
+import { UnauthorizedError } from './errors/unauthorized-error'
 
 export const approveOrder = new Elysia().use(authentication).patch(
   '/orders/:id/approve',
@@ -26,9 +27,13 @@ export const approveOrder = new Elysia().use(authentication).patch(
     })
 
     if (!order) {
-      set.status = 401
+      throw new UnauthorizedError()
+    }
 
-      throw new Error('Order not found under the user managed restaurant.')
+    if (order.status !== 'pending') {
+      set.status = 400
+
+      return { message: 'Order was already approved before.' }
     }
 
     await db
