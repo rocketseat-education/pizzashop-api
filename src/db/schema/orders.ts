@@ -6,7 +6,6 @@ import { orderItems } from './order-items'
 
 export const orderStatusEnum = pgEnum('order_status', [
   'pending',
-  'approved',
   'canceled',
   'processing',
   'delivering',

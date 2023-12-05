@@ -39,7 +39,7 @@ export const approveOrder = new Elysia().use(authentication).patch(
     await db
       .update(orders)
       .set({
-        status: 'approved',
+        status: 'processing',
       })
       .where(eq(orders.id, orderId))
 

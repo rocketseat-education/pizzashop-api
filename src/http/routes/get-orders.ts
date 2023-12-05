@@ -1,7 +1,7 @@
 import Elysia, { t } from 'elysia'
 import { orders, users } from '@/db/schema'
 import { db } from '@/db/connection'
-import { eq, and, ilike, desc, count } from 'drizzle-orm'
+import { eq, and, ilike, desc, count, sql } from 'drizzle-orm'
 import { createSelectSchema } from 'drizzle-typebox'
 import { authentication } from '../authentication'
 
@@ -43,7 +43,18 @@ export const getOrders = new Elysia().use(authentication).get(
     const allOrders = await baseQuery
       .offset(pageIndex * 10)
       .limit(10)
-      .orderBy(desc(orders.createdAt))
+      .orderBy((fields) => {
+        return [
+          sql`CASE ${fields.status} 
+            WHEN 'pending' THEN 1
+            WHEN 'processing' THEN 2
+            WHEN 'delivering' THEN 3
+            WHEN 'delivered' THEN 4
+            WHEN 'canceled' THEN 99
+          END`,
+          desc(fields.createdAt),
+        ]
+      })
 
     const result = {
       orders: allOrders,
