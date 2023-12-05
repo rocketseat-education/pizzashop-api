@@ -17,6 +17,7 @@ import { getProfile } from './routes/get-profile'
 import { authenticateFromLink } from './routes/authenticate-from-link'
 import { getManagedRestaurant } from './routes/get-managed-restaurant'
 import { signOut } from './routes/sign-out'
+import { getOrderDetails } from './routes/get-order-details'
 
 const app = new Elysia()
   .use(
@@ -47,6 +48,7 @@ const app = new Elysia()
   .use(approveOrder)
   .use(cancelOrder)
   .use(getOrders)
+  .use(getOrderDetails)
   .use(createEvaluation)
   .use(getEvaluations)
   .use(updateMenu)
