@@ -10,7 +10,7 @@ export const users = pgTable('users', {
     .$defaultFn(() => createId())
     .primaryKey(),
   name: text('name').notNull(),
-  email: text('email').notNull(),
+  email: text('email').notNull().unique(),
   phone: text('phone'),
   role: userRoleEnum('role').default('customer').notNull(),
   createdAt: timestamp('created_at').defaultNow(),

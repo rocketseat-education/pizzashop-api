@@ -36,6 +36,7 @@
     "drizzle-kit": "0.20.6",
     "eslint": "8.54.0",
     "eslint-plugin-drizzle": "^0.2.1",
+    "eslint_d": "13.1.1",
     "pg": "^8.11.3",
     "typescript": "5.3.2"
   }

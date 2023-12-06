@@ -114,7 +114,7 @@ console.log(chalk.yellow('✔ Created products'))
 const ordersToInsert: (typeof orders.$inferInsert)[] = []
 const orderItemsToPush: (typeof orderItems.$inferInsert)[] = []
 
-for (let i = 0; i < 20; i++) {
+for (let i = 0; i < 200; i++) {
   const orderId = createId()
 
   const orderProducts = faker.helpers.arrayElements(availableProducts, {
@@ -146,7 +146,6 @@ for (let i = 0; i < 20; i++) {
     restaurantId: restaurant.id,
     status: faker.helpers.arrayElement([
       'pending',
-      'approved',
       'canceled',
       'processing',
       'delivering',
@@ -154,7 +153,7 @@ for (let i = 0; i < 20; i++) {
     ]),
     totalInCents,
     createdAt: faker.date.recent({
-      days: 7,
+      days: 40,
     }),
   })
 }

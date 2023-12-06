@@ -18,6 +18,10 @@ import { authenticateFromLink } from './routes/authenticate-from-link'
 import { getManagedRestaurant } from './routes/get-managed-restaurant'
 import { signOut } from './routes/sign-out'
 import { getOrderDetails } from './routes/get-order-details'
+import { getMonthReceipt } from './routes/get-month-receipt'
+import { getMonthOrdersAmount } from './routes/get-month-orders-amount'
+import { getDayOrdersAmount } from './routes/get-day-orders-amount'
+import { getMonthCanceledOrdersAmount } from './routes/get-month-canceled-orders-amount'
 
 const app = new Elysia()
   .use(
@@ -53,6 +57,10 @@ const app = new Elysia()
   .use(getEvaluations)
   .use(updateMenu)
   .use(updateProfile)
+  .use(getMonthReceipt)
+  .use(getMonthOrdersAmount)
+  .use(getDayOrdersAmount)
+  .use(getMonthCanceledOrdersAmount)
 
 app.listen(3333)
 
