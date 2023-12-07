@@ -18,7 +18,10 @@ export const getDailyReceiptInPeriod = new Elysia().use(authentication).get(
     if (endDate.diff(startDate, 'days') > 7) {
       set.status = 400
 
-      return { message: 'Date interval must be a maximum of 7 days.' }
+      return {
+        code: 'INVALID_PERIOD',
+        message: 'Date interval must be a maximum of 7 days.',
+      }
     }
 
     const receiptPerDay = await db
@@ -35,10 +38,23 @@ export const getDailyReceiptInPeriod = new Elysia().use(authentication).get(
         ),
       )
       .groupBy(sql`TO_CHAR(${orders.createdAt}, 'DD/MM')`)
-      .orderBy(sql`TO_CHAR(${orders.createdAt}, 'DD/MM')`)
       .having(({ receipt }) => gte(receipt, 1))
 
-    return receiptPerDay
+    const orderedReceiptPerDay = receiptPerDay.sort((a, b) => {
+      const [dayA, monthA] = a.date.split('/').map(Number)
+      const [dayB, monthB] = b.date.split('/').map(Number)
+
+      if (monthA === monthB) {
+        return dayA - dayB
+      } else {
+        const dateA = new Date(2023, monthA - 1)
+        const dateB = new Date(2023, monthB - 1)
+
+        return dateA.getTime() - dateB.getTime()
+      }
+    })
+
+    return orderedReceiptPerDay
   },
   {
     query: t.Object({
