@@ -20,6 +20,7 @@ export const getPopularProducts = new Elysia()
         .leftJoin(products, eq(products.id, orderItems.productId))
         .where(and(eq(orders.restaurantId, restaurantId)))
         .groupBy(products.name)
+        .limit(5)
 
       return popularProducts
     } catch (err) {
