@@ -23,6 +23,7 @@ import { getMonthOrdersAmount } from './routes/get-month-orders-amount'
 import { getDayOrdersAmount } from './routes/get-day-orders-amount'
 import { getMonthCanceledOrdersAmount } from './routes/get-month-canceled-orders-amount'
 import { getDailyReceiptInPeriod } from './routes/get-daily-receipt-in-period'
+import { getPopularProducts } from './routes/get-popular-products'
 
 const app = new Elysia()
   .use(
@@ -63,6 +64,7 @@ const app = new Elysia()
   .use(getDayOrdersAmount)
   .use(getMonthCanceledOrdersAmount)
   .use(getDailyReceiptInPeriod)
+  .use(getPopularProducts)
 
 app.listen(3333)
 

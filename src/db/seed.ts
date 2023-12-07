@@ -106,6 +106,90 @@ const availableProducts = await db
       restaurantId: restaurant.id,
       description: faker.commerce.productDescription(),
     },
+    {
+      name: faker.commerce.productName(),
+      priceInCents: Number(
+        faker.commerce.price({
+          min: 190,
+          max: 490,
+          dec: 0,
+        }),
+      ),
+      restaurantId: restaurant.id,
+      description: faker.commerce.productDescription(),
+    },
+    {
+      name: faker.commerce.productName(),
+      priceInCents: Number(
+        faker.commerce.price({
+          min: 190,
+          max: 490,
+          dec: 0,
+        }),
+      ),
+      restaurantId: restaurant.id,
+      description: faker.commerce.productDescription(),
+    },
+    {
+      name: faker.commerce.productName(),
+      priceInCents: Number(
+        faker.commerce.price({
+          min: 190,
+          max: 490,
+          dec: 0,
+        }),
+      ),
+      restaurantId: restaurant.id,
+      description: faker.commerce.productDescription(),
+    },
+    {
+      name: faker.commerce.productName(),
+      priceInCents: Number(
+        faker.commerce.price({
+          min: 190,
+          max: 490,
+          dec: 0,
+        }),
+      ),
+      restaurantId: restaurant.id,
+      description: faker.commerce.productDescription(),
+    },
+    {
+      name: faker.commerce.productName(),
+      priceInCents: Number(
+        faker.commerce.price({
+          min: 190,
+          max: 490,
+          dec: 0,
+        }),
+      ),
+      restaurantId: restaurant.id,
+      description: faker.commerce.productDescription(),
+    },
+    {
+      name: faker.commerce.productName(),
+      priceInCents: Number(
+        faker.commerce.price({
+          min: 190,
+          max: 490,
+          dec: 0,
+        }),
+      ),
+      restaurantId: restaurant.id,
+      description: faker.commerce.productDescription(),
+    },
+    {
+      name: faker.commerce.productName(),
+      priceInCents: Number(
+        faker.commerce.price({
+          min: 190,
+          max: 490,
+          dec: 0,
+        }),
+      ),
+      restaurantId: restaurant.id,
+      description: faker.commerce.productDescription(),
+    },
   ])
   .returning()
 
@@ -119,7 +203,7 @@ for (let i = 0; i < 200; i++) {
 
   const orderProducts = faker.helpers.arrayElements(availableProducts, {
     min: 1,
-    max: 2,
+    max: 3,
   })
 
   let totalInCents = 0
