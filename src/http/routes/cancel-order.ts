@@ -31,6 +31,15 @@ export const cancelOrder = new Elysia().use(authentication).patch(
       throw new Error('Order not found under the user managed restaurant.')
     }
 
+    if (!['pending', 'processing'].includes(order.status)) {
+      set.status = 400
+
+      return {
+        code: 'STATUS_NOT_VALID',
+        message: 'You cannot cancel an order after it was dispatched.',
+      }
+    }
+
     await db
       .update(orders)
       .set({
