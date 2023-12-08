@@ -27,7 +27,7 @@ export const deliverOrder = new Elysia().use(authentication).patch(
     if (order.status !== 'delivering') {
       set.status = 400
 
-      return { message: 'Order was already dispatched before.' }
+      return { message: 'O pedido já foi entregue.' }
     }
 
     await db

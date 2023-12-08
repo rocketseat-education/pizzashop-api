@@ -20,7 +20,7 @@ export const getDailyReceiptInPeriod = new Elysia().use(authentication).get(
 
       return {
         code: 'INVALID_PERIOD',
-        message: 'Date interval must be a maximum of 7 days.',
+        message: 'O intervalo das datas não pode ser superior a 7 dias.',
       }
     }
 

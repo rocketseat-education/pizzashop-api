@@ -36,7 +36,7 @@ export const cancelOrder = new Elysia().use(authentication).patch(
 
       return {
         code: 'STATUS_NOT_VALID',
-        message: 'You cannot cancel an order after it was dispatched.',
+        message: 'O pedido não pode ser cancelado depois de ser enviado.',
       }
     }
 
