@@ -33,8 +33,17 @@ export const getDailyReceiptInPeriod = new Elysia().use(authentication).get(
       .where(
         and(
           eq(orders.restaurantId, restaurantId),
-          gte(orders.createdAt, startDate.startOf('day').toDate()),
-          lte(orders.createdAt, endDate.endOf('day').toDate()),
+          gte(
+            orders.createdAt,
+            startDate
+              .startOf('day')
+              .add(startDate.utcOffset(), 'minutes')
+              .toDate(),
+          ),
+          lte(
+            orders.createdAt,
+            endDate.endOf('day').add(endDate.utcOffset(), 'minutes').toDate(),
+          ),
         ),
       )
       .groupBy(sql`TO_CHAR(${orders.createdAt}, 'DD/MM')`)
